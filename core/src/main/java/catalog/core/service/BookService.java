@@ -6,7 +6,9 @@ import catalog.core.domain.Page;
 import catalog.core.domain.PageRequest;
 import catalog.core.exception.NotFoundException;
 import catalog.core.port.CatalogRepositoryPort;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BookService {
     private final CatalogRepositoryPort repository;
 

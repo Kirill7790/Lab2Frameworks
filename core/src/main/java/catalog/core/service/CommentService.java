@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CommentService {
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
     private static final Duration EDIT_WINDOW = Duration.ofHours(24);

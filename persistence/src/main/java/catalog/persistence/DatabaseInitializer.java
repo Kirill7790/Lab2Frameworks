@@ -9,7 +9,9 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.Statement;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DatabaseInitializer {
     private static final Logger log = LoggerFactory.getLogger(DatabaseInitializer.class);
 
