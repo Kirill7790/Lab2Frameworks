@@ -1,6 +1,5 @@
 package catalog.core.service;
 
-
 import catalog.core.domain.Comment;
 import catalog.core.exception.ConflictException;
 import catalog.core.exception.NotFoundException;
@@ -9,11 +8,11 @@ import catalog.core.port.CatalogRepositoryPort;
 import catalog.core.port.CommentRepositoryPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
@@ -23,18 +22,37 @@ public class CommentService {
     private final CommentRepositoryPort commentRepository;
     private final CatalogRepositoryPort catalogRepository;
 
-    public CommentService(CommentRepositoryPort commentRepository, CatalogRepositoryPort catalogRepository) {
+    public CommentService(CommentRepositoryPort commentRepository,
+                          CatalogRepositoryPort catalogRepository) {
         this.commentRepository = commentRepository;
         this.catalogRepository = catalogRepository;
     }
 
+    public List<Comment> listAll() {
+        return commentRepository.findAll();
+    }
+
     public List<Comment> listByBook(long bookId) {
+        if (bookId <= 0) {
+            throw new ValidationException("bookId must be positive");
+        }
         catalogRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Book " + bookId + " not found"));
         return commentRepository.findByBookId(bookId);
     }
 
+    public Comment getById(long id) {
+        if (id <= 0) {
+            throw new ValidationException("id must be positive");
+        }
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Comment " + id + " not found"));
+    }
+
     public Comment addComment(long bookId, String author, String text) {
+        if (bookId <= 0) {
+            throw new ValidationException("bookId must be positive");
+        }
         catalogRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Book " + bookId + " not found"));
         if (author == null || author.isBlank()) {
@@ -50,6 +68,9 @@ public class CommentService {
     }
 
     public void deleteComment(long commentId) {
+        if (commentId <= 0) {
+            throw new ValidationException("commentId must be positive");
+        }
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Comment " + commentId + " not found"));
 

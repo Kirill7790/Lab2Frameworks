@@ -10,14 +10,17 @@ spring:
     hikari:
       pool-name: catalog-pool
       maximum-pool-size: 10
-      minimum-idle: 2
 
   h2:
     console:
       enabled: true
       path: /h2-console
-      settings:
-        web-allow-others: false
+
+  mvc:
+    throw-exception-if-no-handler-found: true
+    contentnegotiation:
+      favor-path-extension: false
+    log-resolved-exception: false
 
   jackson:
     default-property-inclusion: non_null
@@ -26,9 +29,6 @@ spring:
 
 server:
   port: 8080
-  error:
-    include-message: always
-    include-binding-errors: always
   servlet:
     encoding:
       charset: UTF-8
@@ -41,8 +41,6 @@ catalog:
   page:
     default-size: 20
     max-size: 100
-  comment:
-    edit-window-hours: 24
 
 logging:
   level:
@@ -50,7 +48,3 @@ logging:
     catalog: DEBUG
     org.springframework: WARN
     org.springframework.web: INFO
-    org.h2: WARN
-    com.zaxxer.hikari: INFO
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

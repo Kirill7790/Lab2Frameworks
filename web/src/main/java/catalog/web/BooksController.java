@@ -7,25 +7,24 @@ import catalog.core.domain.PageRequest;
 import catalog.core.service.BookService;
 import catalog.core.service.CommentService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/books")
-public class BookController {
+@ResponseBody
+public class BooksController {
 
     private final BookService bookService;
     private final CommentService commentService;
 
-    // Кастомний параметр із application.yaml
     @Value("${catalog.page.default-size}")
     private int defaultPageSize;
 
-    // Конструкторна ін'єкція — рекомендований спосіб
-    public BookController(BookService bookService, CommentService commentService) {
+    public BooksController(BookService bookService, CommentService commentService) {
         this.bookService = bookService;
         this.commentService = commentService;
     }
@@ -50,12 +49,11 @@ public class BookController {
     }
 
     @PostMapping("/{id}/comments")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public Comment addComment(@PathVariable("id") long id,
                               @RequestBody CommentRequest req) {
         return commentService.addComment(id, req.author(), req.text());
     }
 
-    // DTO для POST-запиту
     public record CommentRequest(String author, String text) {}
 }

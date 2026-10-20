@@ -1,6 +1,5 @@
 package catalog.core.domain;
 
-
 import java.time.Instant;
 import java.util.Objects;
 
@@ -12,9 +11,21 @@ public class Book {
     private final Instant publishedAt;
 
     public Book(Long id, String title, String author, String isbn, Instant publishedAt) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Book.title must not be blank");
+        }
+        if (author == null || author.isBlank()) {
+            throw new IllegalArgumentException("Book.author must not be blank");
+        }
+        if (title.length() > 255 || author.length() > 255) {
+            throw new IllegalArgumentException("Book.title/author too long (max 255)");
+        }
+        if (isbn != null && isbn.length() > 32) {
+            throw new IllegalArgumentException("Book.isbn too long (max 32)");
+        }
         this.id = id;
-        this.title = Objects.requireNonNull(title, "title");
-        this.author = Objects.requireNonNull(author, "author");
+        this.title = title.trim();
+        this.author = author.trim();
         this.isbn = isbn;
         this.publishedAt = publishedAt;
     }

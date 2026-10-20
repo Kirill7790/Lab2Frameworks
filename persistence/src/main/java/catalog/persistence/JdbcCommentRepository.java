@@ -50,6 +50,20 @@ public class JdbcCommentRepository implements CommentRepositoryPort {
     }
 
     @Override
+    public List<Comment> findAll() {
+        String sql = "SELECT id, book_id, author, text, created_at FROM comments ORDER BY created_at DESC";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            List<Comment> list = new ArrayList<>();
+            while (rs.next()) list.add(map(rs));
+            return list;
+        } catch (SQLException e) {
+            throw new RuntimeException("findAll failed", e);
+        }
+    }
+
+    @Override
     public Comment save(Comment comment) {
         String sql = "INSERT INTO comments (book_id, author, text, created_at) VALUES (?, ?, ?, ?)";
         try (Connection conn = dataSource.getConnection();
