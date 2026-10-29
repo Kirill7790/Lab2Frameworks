@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{books.header}">Books</title>
+    <style>
+        body { font-family: sans-serif; max-width: 900px; margin: 20px auto; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f0f0f0; }
+        .empty { color: #888; font-style: italic; padding: 20px; }
+        .actions a { margin-right: 8px; }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h2 th:text="#{books.header}">Books</h2>
+
+<p th:if="${#lists.isEmpty(books)}" class="empty" th:text="#{books.empty}">
+    No books yet
+</p>
+
+<table th:unless="${#lists.isEmpty(books)}">
+    <thead>
+    <tr>
+        <th th:text="#{books.col.title}">Title</th>
+        <th th:text="#{books.col.author}">Author</th>
+        <th th:text="#{books.col.isbn}">ISBN</th>
+        <th th:text="#{books.col.actions}">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.title}">Title</td>
+        <td th:text="${book.author}">Author</td>
+        <td th:text="${book.isbn} ?: '—'">ISBN</td>
+        <td class="actions">
+            <a th:href="@{/books/{id}(id=${book.id})}"
+               th:text="#{nav.books}">View</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

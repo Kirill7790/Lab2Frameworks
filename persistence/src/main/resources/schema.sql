@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS comments (
 DELETE FROM comments;
 DELETE FROM books;
 
-INSERT INTO books (id, title, author, isbn, published_at) VALUES
-    (1, 'Effective Java', 'Joshua Bloch', '978-0134685991', CURRENT_TIMESTAMP),
-    (2, 'Clean Code', 'Robert C. Martin', '978-0132350884', CURRENT_TIMESTAMP),
-    (3, 'Java Concurrency in Practice', 'Brian Goetz', '978-0321349606', CURRENT_TIMESTAMP);
+INSERT INTO books (title, author, isbn, published_at) VALUES
+    ('Effective Java', 'Joshua Bloch', '978-0134685991', CURRENT_TIMESTAMP),
+    ('Clean Code', 'Robert C. Martin', '978-0132350884', CURRENT_TIMESTAMP),
+    ('Java Concurrency in Practice', 'Brian Goetz', '978-0321349606', CURRENT_TIMESTAMP);

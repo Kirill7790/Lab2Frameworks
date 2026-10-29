@@ -8,6 +8,8 @@ import catalog.core.exception.ValidationException;
 import catalog.core.port.CatalogRepositoryPort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 @Service
 public class BookService {
     private final CatalogRepositoryPort repository;
@@ -26,5 +28,18 @@ public class BookService {
         }
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book " + id + " not found"));
+    }
+
+    public Book addBook(String title, String author, String isbn) {
+        if (title == null || title.isBlank()) {
+            throw new ValidationException("Title is required");
+        }
+        if (author == null || author.isBlank()) {
+            throw new ValidationException("Author is required");
+        }
+        Book book = new Book(null, title.trim(), author.trim(),
+                (isbn == null || isbn.isBlank()) ? null : isbn.trim(),
+                Instant.now());
+        return repository.save(book);
     }
 }

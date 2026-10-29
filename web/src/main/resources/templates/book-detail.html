@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${book.title}">Book</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; }
+        .book-meta { background: #f9f9f9; padding: 15px; border-radius: 5px; }
+        .comments { margin-top: 20px; }
+        .comment { border-left: 3px solid #ccc; padding-left: 10px; margin-bottom: 10px; }
+        .comment-author { font-weight: bold; }
+        .comment-date { color: #888; font-size: 0.85em; }
+        .empty { color: #888; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h2 th:text="${book.title}">Title</h2>
+
+<div class="book-meta">
+    <p><b th:text="#{form.author}">Author</b>:
+        <span th:text="${book.author}">Author</span></p>
+    <p><b th:text="#{form.isbn}">ISBN</b>:
+        <span th:text="${book.isbn} ?: '—'">ISBN</span></p>
+</div>
+
+<h3>Comments</h3>
+
+<p th:if="${#lists.isEmpty(comments)}" class="empty">No comments yet</p>
+
+<div class="comments" th:unless="${#lists.isEmpty(comments)}">
+    <div th:each="c : ${comments}" class="comment">
+        <div class="comment-author" th:text="${c.author}">Alice</div>
+        <div class="comment-date" th:text="${#temporals.format(c.createdAt, 'yyyy-MM-dd HH:mm')}">
+            Date
+        </div>
+        <div th:text="${c.text}">Text</div>
+    </div>
+</div>
+
+<div style="margin-top: 20px;">
+    <a th:href="@{/books}" th:text="#{back.to.books}">Back</a>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

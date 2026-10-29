@@ -82,6 +82,27 @@ public class JdbcCatalogRepository implements CatalogRepositoryPort {
                 ts == null ? null : ts.toInstant());
     }
 
+    @Override
+    public Book save(Book book) {
+        String sql = "INSERT INTO books (title, author, isbn, published_at) VALUES (?, ?, ?, ?)";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, book.getTitle());
+            ps.setString(2, book.getAuthor());
+            ps.setString(3, book.getIsbn());
+            ps.setTimestamp(4, book.getPublishedAt() == null
+                    ? null : Timestamp.from(book.getPublishedAt()));
+            ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                keys.next();
+                return new Book(keys.getLong(1), book.getTitle(), book.getAuthor(),
+                        book.getIsbn(), book.getPublishedAt());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("save failed", e);
+        }
+    }
+
     private String resolveSortColumn(String sort) {
         String col = sort.split(",")[0].trim();
         return switch (col) {

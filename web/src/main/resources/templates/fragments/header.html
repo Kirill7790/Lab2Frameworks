@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header" class="header">
+    <h1 th:text="#{app.title}">Book Catalog</h1>
+    <nav>
+        <a th:href="@{/books}" th:text="#{nav.books}">Books</a>
+        |
+        <a th:href="@{/books/add}" th:text="#{nav.add}">Add book</a>
+        |
+        <a th:href="@{/books(lang='uk')}">🇺🇦 UK</a>
+        <a th:href="@{/books(lang='en')}">🇬🇧 EN</a>
+    </nav>
+    <hr/>
+</header>
+
+</body>
+</html>
