@@ -6,6 +6,7 @@ import catalog.core.domain.PageRequest;
 import catalog.core.exception.ValidationException;
 import catalog.core.service.BookService;
 import catalog.core.service.CommentService;
+import catalog.web.mail.MailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,19 +21,17 @@ public class BookViewController {
 
     private final BookService bookService;
     private final CommentService commentService;
+    private final MailService mailService;
 
     @Value("${catalog.page.default-size:20}")
     private int defaultPageSize;
 
-    public BookViewController(BookService bookService, CommentService commentService) {
+    public BookViewController(BookService bookService, CommentService commentService, MailService mailService) {
         this.bookService = bookService;
         this.commentService = commentService;
+        this.mailService = mailService;
     }
 
-    /**
-     * GET /books — список книг.
-     * Повертає шаблон "books" (→ templates/books.html).
-     */
     @GetMapping
     public String list(@RequestParam(name = "q", required = false) String q,
                        Model model) {
@@ -42,10 +41,6 @@ public class BookViewController {
         return "books";                     // ← ім'я шаблону
     }
 
-    /**
-     * GET /books/{id} — сторінка книги з коментарями.
-     * Повертає шаблон "book-detail".
-     */
     @GetMapping("/{id}")
     public String detail(@PathVariable("id") long id, Model model) {
         Book book = bookService.getById(id);
@@ -54,9 +49,6 @@ public class BookViewController {
         return "book-detail";
     }
 
-    /**
-     * GET /books/add — показати форму.
-     */
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("book", new BookForm());
@@ -67,7 +59,14 @@ public class BookViewController {
     @PostMapping("/add")
     public String add(@ModelAttribute("book") BookForm form, Model model) {
         try {
-            bookService.addBook(form.getTitle(), form.getAuthor(), form.getIsbn());
+            Book saved = bookService.addBook(form.getTitle(), form.getAuthor(), form.getIsbn());
+
+            try {
+                mailService.sendNewBookEmail(saved);
+            } catch (Exception e) {
+
+            }
+
             return "redirect:/books";
         } catch (ValidationException e) {
             model.addAttribute("error", e.getMessage());

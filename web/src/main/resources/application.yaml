@@ -31,6 +31,34 @@ spring:
     web:
       locale: uk
       locale-resolver: accept-header
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: b3e7782cd9fcaa
+    password: 8cf33773db432f
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+    freemarker:
+      template-loader-path: classpath:/mail-templates/
+      charset: UTF-8
+      suffix: .ftl
+      cache: false
+      check-template-location: true
+app:
+  mail:
+    recipient: sandbox.smtp.mailtrap.io
+    sender: bookapp@erlkonig.sumdu.edu.ua
+
 
 server:
   port: 8080
