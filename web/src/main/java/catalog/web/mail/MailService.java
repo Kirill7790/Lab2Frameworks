@@ -31,9 +31,7 @@ public class MailService {
 
     public void sendNewBookEmail(Book book) {
         try {
-            int year = book.getPublishedAt() != null
-                    ? book.getPublishedAt().atZone(ZoneId.systemDefault()).getYear()
-                    : LocalDateTime.now().getYear();
+            int year = book.getYear() != null ? book.getYear() : LocalDateTime.now().getYear();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             String formattedDate = LocalDateTime.now().format(formatter);
@@ -56,9 +54,10 @@ public class MailService {
             helper.setText(html, true);
 
             mailSender.send(message);
+            log.info("Лист для книги '{}' успішно відправлено", book.getTitle());
 
         } catch (Exception e) {
-            log.error(">>> ПОМИЛКА ВІДПРАВКИ", e);
+            log.error(">>> ПОМИЛКА ВІДПРАВКИ ЛИСТА", e);
         }
     }
 }

@@ -2,35 +2,48 @@ spring:
   application:
     name: book-catalog
 
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
   datasource:
     url: jdbc:h2:mem:catalog;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
     driver-class-name: org.h2.Driver
     username: sa
     password: ""
-    hikari:
-      pool-name: catalog-pool
-      maximum-pool-size: 10
 
   h2:
     console:
       enabled: true
       path: /h2-console
 
-    thymeleaf:
-      cache: false
-      prefix: classpath:/templates/
-      suffix: .html
-      mode: HTML
-      encoding: UTF-8
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
 
-    messages:
-      basename: messages
-      encoding: UTF-8
-      fallback-to-system-locale: false
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
 
-    web:
-      locale: uk
-      locale-resolver: accept-header
+  web:
+    locale: uk
+    locale-resolver: accept-header
+
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 2525
@@ -48,17 +61,17 @@ spring:
           timeout: 5000
           writetimeout: 5000
 
-    freemarker:
-      template-loader-path: classpath:/mail-templates/
-      charset: UTF-8
-      suffix: .ftl
-      cache: false
-      check-template-location: true
+  freemarker:
+    template-loader-path: classpath:/mail-templates/
+    charset: UTF-8
+    suffix: .ftl
+    cache: false
+    check-template-location: true
+
 app:
   mail:
     recipient: sandbox.smtp.mailtrap.io
     sender: bookapp@erlkonig.sumdu.edu.ua
-
 
 server:
   port: 8080

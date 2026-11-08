@@ -9,7 +9,7 @@
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
         th { background: #f0f0f0; }
         .empty { color: #888; font-style: italic; padding: 20px; }
-        .actions a { margin-right: 8px; }
+        .actions a { margin-right: 8px; text-decoration: none; color: #0066cc; }
     </style>
 </head>
 <body>
@@ -27,7 +27,7 @@
     <tr>
         <th th:text="#{books.col.title}">Title</th>
         <th th:text="#{books.col.author}">Author</th>
-        <th th:text="#{books.col.isbn}">ISBN</th>
+        <th>Рік</th>
         <th th:text="#{books.col.actions}">Actions</th>
     </tr>
     </thead>
@@ -35,10 +35,9 @@
     <tr th:each="book : ${books}">
         <td th:text="${book.title}">Title</td>
         <td th:text="${book.author}">Author</td>
-        <td th:text="${book.isbn} ?: '—'">ISBN</td>
+        <td th:text="${book.year}">Year</td>
         <td class="actions">
-            <a th:href="@{/books/{id}(id=${book.id})}"
-               th:text="#{nav.books}">View</a>
+            <a th:href="@{/books/{id}(id=${book.id})}">Деталі та коментарі</a>
         </td>
     </tr>
     </tbody>

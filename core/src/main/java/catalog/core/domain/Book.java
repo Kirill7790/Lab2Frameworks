@@ -1,38 +1,19 @@
 package catalog.core.domain;
 
-import java.time.Instant;
-import java.util.Objects;
-
 public class Book {
     private final Long id;
     private final String title;
     private final String author;
-    private final String isbn;
-    private final Instant publishedAt;
+    private final Integer year;
 
-    public Book(Long id, String title, String author, String isbn, Instant publishedAt) {
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException("Book.title must not be blank");
-        }
-        if (author == null || author.isBlank()) {
-            throw new IllegalArgumentException("Book.author must not be blank");
-        }
-        if (title.length() > 255 || author.length() > 255) {
-            throw new IllegalArgumentException("Book.title/author too long (max 255)");
-        }
-        if (isbn != null && isbn.length() > 32) {
-            throw new IllegalArgumentException("Book.isbn too long (max 32)");
-        }
+    public Book(Long id, String title, String author, Integer year) {
         this.id = id;
-        this.title = title.trim();
-        this.author = author.trim();
-        this.isbn = isbn;
-        this.publishedAt = publishedAt;
+        this.title = title;
+        this.author = author;
+        this.year = year;
     }
-
     public Long getId() { return id; }
     public String getTitle() { return title; }
     public String getAuthor() { return author; }
-    public String getIsbn() { return isbn; }
-    public Instant getPublishedAt() { return publishedAt; }
+    public Integer getYear() { return year; }
 }
