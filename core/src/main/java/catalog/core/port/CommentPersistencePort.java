@@ -10,4 +10,6 @@ public interface CommentPersistencePort {
     Optional<Comment> findById(Long id);
     Comment save(Comment comment);
     void deleteById(Long id);
+    void delete(long bookId, long commentId);
+    boolean existsByIdAndBookId(long commentId, long bookId);
 }

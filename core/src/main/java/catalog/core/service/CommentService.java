@@ -10,6 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import catalog.core.exception.BookNotFoundException;
+import catalog.core.exception.CommentTooOldException;
+import catalog.core.exception.InvalidCommentDeleteException;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -54,6 +61,34 @@ public class CommentService {
 
         return commentPort.save(new Comment(null, text.trim(), LocalDateTime.now(),
                 bookId, userId, null));
+    }
+
+    @Transactional
+    public void delete(long bookId, long commentId, Instant createdAt) {
+        if (bookId <= 0) {
+            throw new InvalidCommentDeleteException("bookId must be > 0");
+        }
+        if (commentId <= 0) {
+            throw new InvalidCommentDeleteException("commentId must be > 0");
+        }
+        if (createdAt == null) {
+            throw new InvalidCommentDeleteException("createdAt is required");
+        }
+
+        LocalDateTime created = LocalDateTime.ofInstant(createdAt, ZoneOffset.UTC);
+        if (created.isBefore(LocalDateTime.now(ZoneOffset.UTC).minus(24, ChronoUnit.HOURS))) {
+            throw new CommentTooOldException(
+                    "Comment created more than 24 hours ago cannot be deleted");
+        }
+
+        bookPort.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Book " + bookId + " not found"));
+
+        if (!commentPort.existsByIdAndBookId(commentId, bookId)) {
+            throw new InvalidCommentDeleteException(
+                    "Comment " + commentId + " does not belong to book " + bookId);
+        }
+        commentPort.delete(bookId, commentId);
     }
 
     @Transactional

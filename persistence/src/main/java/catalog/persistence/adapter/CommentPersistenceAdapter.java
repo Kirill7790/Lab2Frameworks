@@ -37,6 +37,11 @@ public class CommentPersistenceAdapter implements CommentPersistencePort {
     }
 
     @Override
+    public boolean existsByIdAndBookId(long commentId, long bookId) {
+        return repo.existsByIdAndBookId(commentId, bookId);
+    }
+
+    @Override
     public Comment save(Comment c) {
         var book = new catalog.persistence.entity.BookEntity();
         book.setId(c.getBookId());
@@ -46,6 +51,11 @@ public class CommentPersistenceAdapter implements CommentPersistencePort {
         CommentEntity e = new CommentEntity(c.getText(), book, user);
         CommentEntity saved = repo.save(e);
         return toDomain(saved);
+    }
+
+    @Override
+    public void delete(long bookId, long commentId) {
+        repo.deleteByBookIdAndCommentId(bookId, commentId);
     }
 
     @Override

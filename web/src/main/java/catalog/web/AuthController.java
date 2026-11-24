@@ -79,8 +79,6 @@ public class AuthController {
      * напряму з UserPersistencePort через окремий метод (див. нижче).
      */
     private String confirmationCodeOf(User user) {
-        // Тимчасово: код зберігається в адаптері; додайте метод у UserService:
-        //   public String getConfirmationCode(Long userId)
         return userService.getConfirmationCode(user.getId());
     }
 }
