@@ -6,6 +6,7 @@ import catalog.core.exception.ValidationException;
 import catalog.core.port.BookPersistencePort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -21,12 +22,14 @@ public class BookService {
         return port.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public Book findById(Long id) {
         return port.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book " + id + " not found"));
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public Book save(String title, String author, Integer year) {
         if (title == null || title.isBlank()) {
             throw new ValidationException("Title is required");
@@ -38,10 +41,12 @@ public class BookService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(Long id) {
         port.deleteById(id);
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public List<Book> search(String query) {
         return (query == null || query.isBlank())
                 ? port.findAll()

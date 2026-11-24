@@ -8,6 +8,7 @@ import catalog.core.port.CommentPersistencePort;
 import catalog.core.port.UserPersistencePort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,12 +27,14 @@ public class CommentService {
         this.userPort = userPort;
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public List<Comment> getByBook(Long bookId) {
         bookPort.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Book " + bookId + " not found"));
         return commentPort.findByBookId(bookId);
     }
 
+    @PreAuthorize("isAuthenticated()")
     public List<Comment> getByUser(Long userId) {
         userPort.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User " + userId + " not found"));
@@ -39,6 +42,7 @@ public class CommentService {
     }
 
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public Comment addComment(Long bookId, Long userId, String text) {
         if (text == null || text.isBlank() || text.length() > 2000) {
             throw new ValidationException("Comment text must be 1..2000 chars");
@@ -53,6 +57,7 @@ public class CommentService {
     }
 
     @Transactional
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public void deleteComment(Long id) {
         commentPort.deleteById(id);
     }

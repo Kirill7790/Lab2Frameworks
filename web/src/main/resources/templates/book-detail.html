@@ -50,19 +50,9 @@
 
 <h3>Залишити коментар</h3>
 
-<!-- Форма додавання коментаря -->
-<!-- Передаємо book.id у URL, а userId - через параметр форми -->
-<form th:action="@{/books/{id}/comments(id=${book.id})}" method="post">
-
-    <div class="form-group">
-        <label for="userId"><b>Оберіть користувача:</b></label>
-        <select name="userId" id="userId" required>
-            <option value="" disabled selected>-- Виберіть --</option>
-            <option th:each="u : ${users}"
-                    th:value="${u.id}"
-                    th:text="${u.username}">User</option>
-        </select>
-    </div>
+<form sec:authorize="isAuthenticated()"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:action="@{/books/{id}/comments(id=${book.id})}" method="post">
 
     <div class="form-group">
         <label for="text"><b>Текст коментаря:</b></label>
@@ -71,6 +61,11 @@
 
     <button type="submit">Додати коментар</button>
 </form>
+
+<div sec:authorize="!isAuthenticated()"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <a th:href="@{/login}">Увійдіть</a>, щоб залишити коментар.
+</div>
 
 <div style="margin-top: 30px;">
     <a th:href="@{/books}" th:text="#{back.to.books}">Back</a>

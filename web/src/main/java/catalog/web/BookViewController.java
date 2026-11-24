@@ -64,14 +64,21 @@ public class BookViewController {
 
     @PostMapping("/{id}/comments")
     public String addComment(@PathVariable("id") Long bookId,
-                             @RequestParam("userId") Long userId,
-                             @RequestParam("text") String text) {
+                             @RequestParam("text") String text,
+                             java.security.Principal principal) {
         try {
+            Long userId = userService.findByUsername(principal.getName()).getId();
             commentService.addComment(bookId, userId, text);
         } catch (Exception e) {
-        }
 
+        }
         return "redirect:/books/" + bookId;
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable("id") Long id) {
+        bookService.delete(id);
+        return "redirect:/books";
     }
 
     public static class BookForm {

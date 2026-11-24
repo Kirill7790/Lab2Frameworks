@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="uk">
 <head>
     <meta charset="UTF-8">
     <title th:text="#{books.header}">Books</title>
@@ -10,6 +11,8 @@
         th { background: #f0f0f0; }
         .empty { color: #888; font-style: italic; padding: 20px; }
         .actions a { margin-right: 8px; text-decoration: none; color: #0066cc; }
+        .actions form { display: inline; }
+        .actions button { background: none; border: none; color: #b00020; cursor: pointer; padding: 0; }
     </style>
 </head>
 <body>
@@ -38,6 +41,16 @@
         <td th:text="${book.year}">Year</td>
         <td class="actions">
             <a th:href="@{/books/{id}(id=${book.id})}">Деталі та коментарі</a>
+
+            <!-- Видалення — ЛИШЕ для ADMIN, ВСЕРЕДИНІ циклу -->
+            <form sec:authorize="hasRole('ADMIN')"
+                  th:action="@{/books/{id}/delete(id=${book.id})}"
+                  method="post">
+                <button type="submit"
+                        onclick="return confirm('Видалити книгу?')">
+                    Видалити
+                </button>
+            </form>
         </td>
     </tr>
     </tbody>

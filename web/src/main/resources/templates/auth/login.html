@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вхід</title>
+    <style>
+        body { font-family: sans-serif; max-width: 400px; margin: 40px auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 20px; cursor: pointer; }
+        .error { color: #b00020; margin-bottom: 12px; }
+        .ok { color: #2e7d32; margin-bottom: 12px; }
+        .links { margin-top: 15px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<h2>Вхід</h2>
+
+<div class="error" th:if="${param.error}">Невірний логін або пароль.</div>
+<div class="ok"    th:if="${param.logout}">Ви успішно вийшли.</div>
+
+<form th:action="@{/login}" method="post">
+    <div class="form-group">
+        <label for="username">Логін</label>
+        <input type="text" id="username" name="username" required autofocus/>
+    </div>
+    <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" required/>
+    </div>
+    <button type="submit">Увійти</button>
+</form>
+
+<div class="links">
+    <a th:href="@{/register}">Реєстрація</a>
+</div>
+
+</body>
+</html>

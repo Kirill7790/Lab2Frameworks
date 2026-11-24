@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Підтвердження</title>
+</head>
+<body style="font-family: sans-serif; max-width: 500px; margin: 40px auto;">
+<h2>Підтвердження акаунту</h2>
+<div th:if="${message}" th:text="${message}" style="color:#2e7d32;">OK</div>
+<div th:if="${error}"   th:text="${error}"   style="color:#b00020;">Error</div>
+<p><a th:href="@{/login}">Перейти до входу</a></p>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package catalog.persistence.adapter;
 
 import catalog.core.domain.User;
+import catalog.core.port.UserAuthPort;
 import catalog.core.port.UserPersistencePort;
 import catalog.persistence.entity.UserEntity;
 import catalog.persistence.repository.UserRepository;
@@ -38,5 +39,33 @@ public class UserPersistenceAdapter implements UserPersistencePort {
 
     private User toDomain(UserEntity e) {
         return new User(e.getId(), e.getUsername(), e.getRole());
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return repo.existsByUsername(username);
+    }
+
+    @Override
+    public User save(String username, String passwordHash, String role,
+                     boolean enabled, String confirmationCode) {
+        UserEntity e = new UserEntity(username, passwordHash, role);
+        e.setEnabled(enabled);
+        e.setConfirmationCode(confirmationCode);
+        return toDomain(repo.save(e));
+    }
+
+    @Override
+    public Optional<User> confirmByCode(String code) {
+        return repo.findByConfirmationCode(code).map(e -> {
+            e.setEnabled(true);
+            e.setConfirmationCode(null);
+            return toDomain(repo.save(e));
+        });
+    }
+
+    @Override
+    public Optional<String> findConfirmationCodeByUserId(Long userId) {
+        return repo.findById(userId).map(UserEntity::getConfirmationCode);
     }
 }

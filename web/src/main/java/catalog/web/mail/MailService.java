@@ -60,4 +60,27 @@ public class MailService {
             log.error(">>> ПОМИЛКА ВІДПРАВКИ ЛИСТА", e);
         }
     }
+
+    public void sendConfirmationEmail(String to, String username, String code) {
+        try {
+            Map<String, Object> model = new HashMap<>();
+            model.put("username", username);
+            model.put("code", code);
+            model.put("confirmUrl", "http://localhost:8080/confirm?code=" + code);
+
+            Template template = freemarkerConfig.getTemplate("confirm_email.ftl");
+            StringWriter writer = new StringWriter();
+            template.process(model, writer);
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject("Підтвердження акаунту BookApp");
+            helper.setText(writer.toString(), true);
+            mailSender.send(message);
+            log.info("Лист-підтвердження надіслано на {}", to);
+        } catch (Exception e) {
+            log.error("Не вдалося надіслати лист-підтвердження", e);
+        }
+    }
 }
